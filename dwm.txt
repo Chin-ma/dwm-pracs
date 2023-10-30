@@ -1,0 +1,236 @@
+pip install scikit-learn-extra
+pip install scikit-learn
+pip install matplotlib
+pip install pandas
+
+
+for installing pip, got to your terminal/command prompt and type these 2 commands 
+1)curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+2)python3 get-pip.py
+
+
+
+
+
+EXP 5 - K Means Algorithm using PYTHON
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+# Generate some sample data
+np.random.seed(0)
+data = np.random.rand(100, 2)
+
+k = 3  # Number of clusters
+
+# Create and fit the KMeans model
+kmeans = KMeans(n_clusters=k, random_state=0)
+kmeans.fit(data)
+
+# Get the cluster centroids and labels
+centroids = kmeans.cluster_centers_
+labels = kmeans.labels_
+
+# Plot the data points and cluster centroids
+plt.scatter(data[:, 0], data[:, 1], c=labels, cmap='viridis')
+plt.scatter(centroids[:, 0], centroids[:, 1], c='red', marker='x', s=200)
+plt.title("K-Means Clustering")
+plt.show()
+
+
+
+
+
+EXP 6 - Implement any one Classifier using PYTHON
+
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree  # Import the plot_tree function
+import matplotlib.pyplot as plt  # Import Matplotlib for plotting
+from sklearn.metrics import accuracy_score, classification_report
+
+
+iris = load_iris()
+x = iris.data
+y = iris.target
+
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=42)
+
+
+dt = DecisionTreeClassifier()
+
+
+dt.fit(x_train, y_train)
+
+
+plt.figure(figsize=(12, 8))
+plot_tree(dt, feature_names=iris.feature_names, class_names=iris.target_names, filled=True, rounded=True)
+plt.show()
+
+
+y_pred = dt.predict(x_test)
+
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy: ", accuracy)
+
+
+report = classification_report(y_test, y_pred, target_names=iris.target_names)
+print("Classification report: ")
+print(report)
+
+
+
+
+
+
+
+
+
+EXP 7 - K Medoids Algorithm using PYTHON
+
+
+from sklearn_extra.cluster import KMedoids
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+data = np.array([[1, 2],
+                 [2, 3],
+                 [3, 4],
+                 [8, 7],
+                 [9, 6],
+                 [10, 5]])
+
+
+kmedoids = KMedoids(n_clusters=2)
+
+
+kmedoids.fit(data)
+
+
+cluster_medoids = kmedoids.cluster_centers_
+
+
+cluster_labels = kmedoids.labels_
+
+
+plt.scatter(data[:, 0], data[:, 1], c=cluster_labels, cmap='viridis')
+plt.scatter(cluster_medoids[:, 0], cluster_medoids[:, 1], c='red', marker='x', s=100, label='Medoids')
+plt.legend()
+plt.title('K-Medoids Clustering')
+plt.show()
+
+
+
+
+
+
+
+
+Apriori algo
+
+function apriori(data, min_support):
+    L1 = find_frequent_1_itemsets(data, min_support)
+    result = L1
+    k = 2
+    
+    while Lk-1 is not empty:
+        Ck = generate_candidate_itemsets(Lk-1)
+        Lk = scan_data_and_find_frequent_itemsets(Ck, min_support)
+        
+        if Lk is not empty:
+            result = result ∪ Lk
+        k = k + 1
+    
+    return result
+    
+    
+Fp growth
+
+FP-tree Pseudocode and Explanation
+Step 1: Deduce the ordered frequent items. For items with the same frequency, the order is given by the alphabetical order.
+Step 2: Construct the FP-tree from the above data
+Step 3: From the FP-tree above, construct the FP-conditional tree for each item (or itemset).
+Step 4: Determine the frequent patterns.
+
+
+
+Apriori Algorithm
+
+Input:
+
+    dataset: A collection of transactions.
+    min_support: A minimum support threshold.
+    min_confidence: A minimum confidence threshold.
+
+Output:
+
+    Frequent itemsets: A list of itemsets that meet the minimum support threshold.
+    Association rules: Rules that meet the minimum confidence threshold.
+
+Algorithm Steps:
+
+    Generate 1-Itemsets:
+        Count the frequency of each individual item in the dataset.
+        Identify 1-itemsets that have support greater than or equal to min_support.
+
+    Repeat for k = 2, 3, ... until no frequent itemsets are found:
+
+        Generate Candidates:
+            Create candidate k-itemsets by joining frequent (k-1)-itemsets.
+            For each candidate, ensure it is not a subset of any (k-1)-itemset that has already been pruned.
+
+        Count Support:
+            Count the support (number of transactions containing the itemset) for each candidate k-itemset in the dataset.
+
+        Prune Candidates:
+            Remove candidates with support less than min_support.
+
+    Generate Association Rules:
+        For each frequent itemset, generate all possible non-empty subsets (antecedents) and the corresponding consequent.
+        Calculate the confidence of each association rule.
+        Keep rules where confidence is greater than or equal to min_confidence.
+
+    Output:
+        Return the frequent itemsets and association rules that meet the support and confidence thresholds.
+
+FP-Growth Algorithm
+
+Input:
+
+    dataset: A collection of transactions.
+    min_support: A minimum support threshold.
+
+Output:
+
+    Frequent itemsets: A list of itemsets that meet the minimum support threshold.
+    Association rules: Rules generated based on the frequent itemsets.
+
+Algorithm Steps:
+
+    Scan the dataset once to count item frequencies:
+        Create a dictionary or data structure to store the frequency of each item in the dataset.
+        Filter out items that do not meet the min_support threshold.
+
+    Sort items by frequency (ascending order):
+        Sort the items based on their frequencies in non-increasing order.
+
+    Build the FP-Tree (Frequent Pattern Tree):
+        Initialize an empty FP-Tree.
+        For each transaction, insert items into the tree in order of decreasing frequency.
+        Use a reference table to keep track of the location of each item in the tree.
+
+    Mine Frequent Patterns:
+        Initialize an empty frequent patterns list.
+        For each item in the sorted order:
+            Starting from the lowest frequency item, recursively generate conditional FP-Trees by removing that item.
+            For each conditional FP-Tree, find frequent patterns by combining the item with its frequent patterns.
+
+    Generate Association Rules:
+        For each frequent itemset, generate all possible non-empty subsets (antecedents) and the corresponding consequent.
+        Calculate the confidence of each association rule.
+        Keep rules where confidence is greater than or equal to a specified threshold.
